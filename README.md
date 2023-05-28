@@ -473,6 +473,14 @@ from pydantic import HttpUrl, FilePath, DirectoryPath, EmailStr, PaymentCardNumb
 
 2- parametro "example" dentro de cada Field()
 
+------------------------------------------------
+
+## Formas de cargar valores por defecto para los Paths y los Query Parameters
+
+Las clases Query() y Path() tienen exactamente el mismo parametro para agregar ejemplos que Field(). Es decir el parametro "example"
+
+Con estos recursos ya tendremos los parametros del Path, las Querys y el Body precargados para probar nuestros endpoints desde la documentación automatica de FastAPI.
+
 
 
 

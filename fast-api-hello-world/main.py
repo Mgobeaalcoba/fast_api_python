@@ -26,17 +26,20 @@ class Location(BaseModel):
     city: str = Field(
         ...,
         min_length=1,
-        max_length=20
+        max_length=20,
+        example="Ituzaingo"
     )
     state: str = Field(
         ...,
         min_length=1,
-        max_length=20
+        max_length=20,
+        example="Buenos Aires"
     )
     country: str = Field(
         ...,
         min_length=1,
-        max_length=20
+        max_length=20,
+        example="Argentina"
     )
 
 class Person(BaseModel):
@@ -105,12 +108,14 @@ def show_person(
         min_length=1, 
         max_length=50,
         title="Person Name",
-        description="This is the person name. It's between 1 and 50 characters"
+        description="This is the person name. It's between 1 and 50 characters",
+        example="Mariano"
         ),
     age: str = Query(
         ...,
         title="Person Age",
-        description="This is the person age. It's required.") # Query Parameter obligatorio... Mala práctica pero puede ocurrir
+        description="This is the person age. It's required."), # Query Parameter obligatorio... Mala práctica pero puede ocurrir
+        example=25
 ):
     return {name: age}
 
@@ -122,7 +127,8 @@ def show_person(
         ..., 
         gt=0,
         title="Person ID",
-        description="This is the person ID. It will be greater or equal than cero"
+        description="This is the person ID. It will be greater or equal than cero",
+        example=123
         ) # Como es un path parameters debe ser obligatorio
 ):
     return {person_id: "It exists!"}
@@ -135,7 +141,8 @@ def update_person(
         ...,
         title="Person ID",
         description="This is the person ID",
-        gt=0
+        gt=0,
+        example=123
     ),
     person: Person = Body(
         ...,

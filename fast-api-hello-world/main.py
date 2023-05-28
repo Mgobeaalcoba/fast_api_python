@@ -23,9 +23,21 @@ class HairColor(Enum):
     red = "red"
 
 class Location(BaseModel):
-    city: str
-    state: str
-    country: str
+    city: str = Field(
+        ...,
+        min_length=1,
+        max_length=20
+    )
+    state: str = Field(
+        ...,
+        min_length=1,
+        max_length=20
+    )
+    country: str = Field(
+        ...,
+        min_length=1,
+        max_length=20
+    )
 
 class Person(BaseModel):
     # Definimos el modelo según "pydantic":
@@ -40,7 +52,7 @@ class Person(BaseModel):
         min_length=1,
         max_length=50
     )
-    age: int = Field(
+    age: PositiveInt = Field(
         ...,
         gt=0,
         le=115

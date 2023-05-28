@@ -45,24 +45,42 @@ class Person(BaseModel):
     first_name: str = Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        example="Nicole"
         )
     last_name: str = Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        example="Ferandez"
     )
-    age: PositiveInt = Field(
+    age: int = Field(
         ...,
         gt=0,
-        le=115
+        le=115,
+        example=29
     )
     hair_color: Optional[HairColor] = Field(
-        default=None
+        default=None,
+        example="Blonde"
     ) # Valores opcionales 
     is_married: Optional[bool] = Field(
         default=None,
+        example=True
     ) # Valores opcionales
+
+    # Sub-Clase Config que define valore por defecto solo al servicio
+    # de probar nuestra API
+    # class Config:
+    #     screma_extra = {
+    #         "example": {
+    #             "first_name": "Mariano",
+    #             "last_name": "Gobea Alcoba",
+    #             "age": 35,
+    #             "hair_color": "Blonde",
+    #             "is_married": False
+    #         }
+    #     }
 
 
 # Path Operations: 1° Path operation

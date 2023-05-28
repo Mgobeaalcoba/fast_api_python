@@ -465,6 +465,13 @@ from pydantic import HttpUrl, FilePath, DirectoryPath, EmailStr, PaymentCardNumb
 
 <img src="./images/datos_especiales.png">
 
+----------------------------------------------
+
+## Formas para cargar valores por defecto en nuestros request
+
+1- class Config
+
+2- parametro "example" dentro de cada Field()
 
 
 

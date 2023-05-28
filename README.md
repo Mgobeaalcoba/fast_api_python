@@ -380,6 +380,8 @@ que realizar validaciones en el modelo como veremos a continuación. Acá solo p
 
 ## Validaciones: Models
 
+Las validaciones en el Modelo se realizan directamente en la construcción de las clases del modelo mismo. 
+
 ```python
 #Python
 from typing import Optional

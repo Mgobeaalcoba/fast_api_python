@@ -436,11 +436,11 @@ class Person(BaseModel):
     # class Config: 
     #     schema_extra = {
     #         "example": {
-    #             "first_name": "Facundo",
-    #             "last_name": "García Martoni",
-    #             "age": 21, 
+    #             "first_name": "Mariano",
+    #             "last_name": "Gobea Alcoba",
+    #             "age": 35, 
     #             "hair_color": "blonde",
-    #             "is_married": False
+    #             "is_married": True
     #         }
     #     }
 
@@ -448,6 +448,22 @@ class Person(BaseModel):
 def home(): 
     return {"Hello": "World"}
 ```
+
+------------------------------------------
+
+## Validacion de tipos de datos especiales.
+
+Docu oficial: https://pydantic-docs.helpmanual.io/usage/types/#pydantic-types
+
+Por ejemplo, podemos validar que un email sea realmente un email o que una contraseña tenga un formato admitido para contraseña, etc
+
+Todas estas validaciones se importan de Pydantic
+
+```python
+from pydantic import HttpUrl, FilePath, DirectoryPath, EmailStr, PaymentCardNumber, IPvAnyAddress, NegativeFloat, PositiveFloat, NegativeInt, PositiveInt 
+```
+
+<img src="./images/datos_especiales.png">
 
 
 

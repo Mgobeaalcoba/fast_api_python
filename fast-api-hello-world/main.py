@@ -3,10 +3,11 @@ from typing import Optional
 from enum import Enum
 # Pydantic
 from pydantic import BaseModel
-from pydantic import Field # Function para validar Models
+from pydantic import Field, HttpUrl, FilePath, DirectoryPath, EmailStr, PaymentCardNumber, IPvAnyAddress, NegativeFloat, PositiveFloat, NegativeInt, PositiveInt # Function para validar Models
 # FastAPI
 from fastapi import FastAPI
 from fastapi import Body, Query, Path # Functions para validar Body, Query y Path
+
 
 # Si usamos el entry point acá el servidor no se levanta. Ojo!!!
 

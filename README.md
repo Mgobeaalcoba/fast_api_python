@@ -139,7 +139,7 @@ from fastapi import FastAPI
 app = FastAPI()
 
 
-@app.get("/items/{item_id}")
+@app.get("/items/{item_id}") # Path parameter
 async def read_item(item_id):
     return {"item_id": item_id}
 ```
@@ -154,9 +154,147 @@ https://fastapi.tiangolo.com/tutorial/query-params/
 
 Query parameters: son un conjunto definido de parámetros adjuntos al final de una URL . Son extensiones de la URL que se utilizan para ayudar a definir contenido o acciones específicos en función de los datos que se transmiten.
 
+```python
+@app.get("/users/{user_id}/details?age=20&height=184) # Detras de "?" están los query parameteres
+```
+
 <img src="./images/query_parameters.png">
 
 --------------------------------------
+
+## Request Body & Response Body:
+
+HTTP = Hyper Text Transfer Protocol
+
+Se ejecutan ambos, Request Body y Response Body en JSON
+
+Documentacion: https://fastapi.tiangolo.com/tutorial/body/
+
+Un Request Body son datos enviados por el cliente a su API.
+
+Un Response Body son los datos que su API envía al cliente.
+
+<img src="./images/request_body.png">
+
+--------------------------------------------
+
+## Models. O como construimos nuestras entidades que luego vamos a registrar en base de datos.
+
+Modelo -> Entidad -> Clase
+
+Modelo no es nada mas que la representación de una entidad en código al menos de manera descriptiva.
+
+Entidades en Twitter:
+
+1- Tweet
+2- Usuarios
+
+Si creamos una API de Tweeter deberiamos crear dos modelos al menos. Uno para Tweet y una para Usuarios. 
+
+Esto lo vamos a hacer con "Pydantic" y su clase BaseModel que es la librería que nos permite construir modelos en Python.
+
+Documentacion Oficial: https://fastapi.tiangolo.com/tutorial/sql-databases/
+
+¿Como luce un modelo dentro de FastAPI?
+
+Modelo pydantic para validar datos:
+
+```python
+from typing import List, Optional
+
+from pydantic import BaseModel
+
+
+class ItemBase(BaseModel):
+    title: str
+    description: Optional[str] = None
+
+
+class ItemCreate(ItemBase):
+    pass
+
+
+class Item(ItemBase):
+    id: int
+    owner_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class UserBase(BaseModel):
+    email: str
+
+
+class UserCreate(UserBase):
+    password: str
+
+
+class User(UserBase):
+    id: int
+    is_active: bool
+    items: List[Item] = []
+
+    class Config:
+        orm_mode = True
+```
+
+Un modelo para mapear los datos a la base de datos (ORM, SQLalchemy)
+
+```python
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
+
+from .database import Base
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
+    is_active = Column(Boolean, default=True)
+
+    items = relationship("Item", back_populates="owner")
+
+
+class Item(Base):
+    __tablename__ = "items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True)
+    description = Column(String, index=True)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+
+    owner = relationship("User", back_populates="items")
+```
+
+-----------------------------------------------
+
+## Validaciones: Query Parameters
+
+Es necesario validar que los Query Parameters cumplan con determinadas caracteristicas para que no rompan nuestro modelo y nuestra API. Esto se hace de la siguiente forma: 
+
+```python
+#Python
+from typing import Optional
+
+#FastAPI
+from fastapi import FastAPI
+from fastapi import Body, Query
+
+app = FastAPI()
+
+@app.get("/person/detail")
+def show_person(
+    name: Optional[str] = Query(None, min_length=1, max_length=50),
+    age: str = Query(...)
+): 
+    return {name: age}
+```
+
+
 
 
 

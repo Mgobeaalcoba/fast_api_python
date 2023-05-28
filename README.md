@@ -86,3 +86,80 @@ Acceder a la documentación interactiva con Redoc:
 http://{localhost}/redoc // http://127.0.0.1:8000//redoc
 ```
 
+-------------------------------------------------
+
+## Path Operations
+
+Ejemplo en nuestro codigo: 
+
+```python
+@app.get("/") # Path operation decorator
+def home(): # Path operation function
+    return {"Hello": "world"} # Path operation function
+```
+
+Un **path** es lo mismo que un **route** o **endpoints** y es todo aquello que vaya después de nuestro dominio a la derecha del mismo.
+
+¿Que son las operations?
+
+Un **operations** es exactamente lo mismo que un **método http** y tenemos las siguientes más populares:
+
+- GET
+- POST
+- PUT
+- DELETE
+
+Y otros métodos como OPTIONS, HEAD, PATCH
+
+- Options:
+Devuelve un header adicional llamado allow que contiene los metodos http que pueden utilizarse en ese endpoint.
+
+- Head:
+Devuelve info sobre el documento, mas no el documento en si.
+
+- Patch:
+Hacer modificaciones parciales al documento a diferencia de put que permite cambiar el documento entero.
+
+- Trace:
+Nos permite observar que esta pasando en la peticion y nos devuelve nuestro input con propositos de debugging.
+
+<img src="./images/path_operations.png">
+
+--------------------------------------
+
+## Path Parameters:
+
+https://fastapi.tiangolo.com/tutorial/path-params/
+
+Los **parámetros de ruta** son partes **variables** de una ruta URL . Por lo general, se utilizan para señalar un recurso específico dentro de una colección, como un usuario identificado por ID. Una URL puede tener varios parámetros de ruta.
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+@app.get("/items/{item_id}")
+async def read_item(item_id):
+    return {"item_id": item_id}
+```
+
+<img src="./images/path_parameters.png">
+
+--------------------------------------
+
+## Query Parameters: 
+
+https://fastapi.tiangolo.com/tutorial/query-params/
+
+Query parameters: son un conjunto definido de parámetros adjuntos al final de una URL . Son extensiones de la URL que se utilizan para ayudar a definir contenido o acciones específicos en función de los datos que se transmiten.
+
+<img src="./images/query_parameters.png">
+
+--------------------------------------
+
+
+
+
+
+

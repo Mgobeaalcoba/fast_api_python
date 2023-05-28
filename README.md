@@ -294,6 +294,51 @@ def show_person(
     return {name: age}
 ```
 
+Validaciones de Query Parameters:
+
+Validar strings:
+
+- max_length
+- min_length
+- regex
+
+Validar numeros:
+
+- ge = greater or equal than = >=
+- le = less or equal than = <=
+- gt = greater than = >
+- lt = less than = <
+
+Parametros de Query parameters descriptivos e informativos o parametros para documentación:
+
+- Title
+- Description
+
+-----------------------------------
+
+## Validaciones: Path Parameters:
+
+Las validaciones pueden realizarse sobre los query parameters como vimos arriba o también pueden realizarse sobre los path parameters como en este ejemplo: 
+
+```python
+#Pydantic
+from pydantic import BaseModel
+
+#FastAPI
+from fastapi import FastAPI
+from fastapi import Path
+
+app = FastAPI()
+
+# Validaciones: Path Parameters
+
+@app.get("/person/detail/{person_id}")
+def show_person(
+    person_id: int = Path(..., gt=0)
+): 
+    return {person_id: "It exists!"}
+```
+
 
 
 

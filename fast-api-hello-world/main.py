@@ -4,8 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 # FastAPI
 from fastapi import FastAPI
-from fastapi import Body
-from fastapi import Query
+from fastapi import Body, Query, Path
 
 # Si usamos el entry point acá el servidor no se levanta. Ojo!!!
 
@@ -40,8 +39,29 @@ def create_person(person: Person = Body(...)): # Los "..." en Body indican que e
 
 @app.get("/person/detail")
 def show_person(
-    name: Optional[str] = Query(None, min_length=1, max_length=50),
-    age: str = Query(...) # Query Parameter obligatorio... Mala práctica pero puede ocurrir
+    name: Optional[str] = Query(
+        None, 
+        min_length=1, 
+        max_length=50,
+        title="Person Name",
+        description="This is the person name. It's between 1 and 50 characters"
+        ),
+    age: str = Query(
+        ...,
+        title="Person Age",
+        description="This is the person age. It's required.") # Query Parameter obligatorio... Mala práctica pero puede ocurrir
 ):
     return {name: age}
+
+# Validaciones: Path Parameters:
+@app.get("/person/detail/{person_id}")
+def show_person(
+    person_id: int = Path(
+        ..., 
+        gt=0,
+        title="Person ID",
+        description="This is the person ID. It will be greater or equal than cero"
+        ) # Como es un path parameters debe ser obligatorio
+):
+    return {person_id: "It exists!"}
 

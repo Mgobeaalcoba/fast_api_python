@@ -12,6 +12,11 @@ app = FastAPI()
 
 # Models:
 
+class Location(BaseModel):
+    city: str
+    state: str
+    country: str
+
 class Person(BaseModel):
     # Definimos el modelo según "pydantic":
     # caracteristicas o atributos:
@@ -54,6 +59,7 @@ def show_person(
     return {name: age}
 
 # Validaciones: Path Parameters:
+
 @app.get("/person/detail/{person_id}")
 def show_person(
     person_id: int = Path(
@@ -65,3 +71,26 @@ def show_person(
 ):
     return {person_id: "It exists!"}
 
+# Validaciones: Request Body
+
+@app.put("/person/{person_id}")
+def update_person(
+    person_id: int = Path(
+        ...,
+        title="Person ID",
+        description="This is the person ID",
+        gt=0
+    ),
+    person: Person = Body(
+        ...,
+    ),
+    location: Location = Body(
+        ...,
+    )
+):
+    # Voy a combinar el JSON/Diccionario person con el 
+    # JSON/Diccionario location en una sola variable. 
+    # Para luego retornarla
+    results = person.dict()
+    results.update(location.dict())
+    return results

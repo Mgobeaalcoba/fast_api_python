@@ -339,6 +339,113 @@ def show_person(
     return {person_id: "It exists!"}
 ```
 
+----------------------------------------
+
+## Validaciones: Request Body:
+
+También podemos validar el contenido del Request Body...
+
+```python
+#Pydantic
+from pydantic import BaseModel
+
+#FastAPI
+from fastapi import FastAPI
+from fastapi import Path
+
+app = FastAPI()
+
+# Validaciones: Request Body
+
+@app.put("/person/{person_id}")
+def update_person(
+    person_id: int = Path(
+        ...,
+        title="Person ID",
+        description="This is the person ID",
+        gt=0
+    ),
+    person: Person = Body(...),
+    location: Location = Body(...)
+): 
+    results = person.dict()
+    results.update(location.dict())
+    return results
+```
+
+Para lograr una validación de los request body a nivel de los distintos atributos que tiene cada clase del request vamos a tener
+que realizar validaciones en el modelo como veremos a continuación. Acá solo podremos validar que clases queremos recibir en el body de nuestra request
+
+--------------------------------------
+
+## Validaciones: Models
+
+```python
+#Python
+from typing import Optional
+from enum import Enum
+
+#Pydantic
+from pydantic import BaseModel
+from pydantic import Field
+
+#FastAPI
+from fastapi import FastAPI
+from fastapi import Body, Query, Path
+
+app = FastAPI()
+
+# Models
+
+class HairColor(Enum): 
+    white = "white"
+    brown = "brown"
+    black = "black"
+    blonde = "blonde"
+    red = "red"
+
+class Location(BaseModel): 
+    city: str
+    state: str
+    country: str
+
+class Person(BaseModel): 
+    first_name: str = Field(
+        ..., 
+        min_length=1,
+        max_length=50,
+        example="Miguel"
+        )
+    last_name: str = Field(
+        ..., 
+        min_length=1,
+        max_length=50,
+        example="Torres"
+        )
+    age: int = Field(
+        ...,
+        gt=0,
+        le=115,
+        example=25
+    )
+    hair_color: Optional[HairColor] = Field(default=None, example=HairColor.black)
+    is_married: Optional[bool] = Field(default=None, example=False)
+
+    # class Config: 
+    #     schema_extra = {
+    #         "example": {
+    #             "first_name": "Facundo",
+    #             "last_name": "García Martoni",
+    #             "age": 21, 
+    #             "hair_color": "blonde",
+    #             "is_married": False
+    #         }
+    #     }
+
+@app.get("/")
+def home(): 
+    return {"Hello": "World"}
+```
 
 
 

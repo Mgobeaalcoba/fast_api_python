@@ -289,7 +289,7 @@ app = FastAPI()
 @app.get("/person/detail")
 def show_person(
     name: Optional[str] = Query(None, min_length=1, max_length=50),
-    age: str = Query(...)
+    age: Optional[str] = Query(...)
 ): 
     return {name: age}
 ```

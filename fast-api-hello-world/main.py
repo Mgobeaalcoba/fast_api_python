@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from pydantic import Field, HttpUrl, FilePath, DirectoryPath, EmailStr, PaymentCardNumber, IPvAnyAddress, NegativeFloat, PositiveFloat, NegativeInt, PositiveInt # Function para validar Models
 # FastAPI
 from fastapi import FastAPI
+from fastapi import status
 from fastapi import Body, Query, Path # Functions para validar Body, Query y Path
 
 
@@ -82,7 +83,8 @@ class Person(PersonBase):
     # 2- Jamas almacenar la contraseña como texto plano sino como hash
     password: str = Field(
         ...,
-        min_length=8
+        min_length=8,
+        example="marianocapo123"
     )
     # Sub-Clase Config que define valore por defecto solo al servicio
     # de probar nuestra API
@@ -103,7 +105,10 @@ class PersonOut(PersonBase):
     pass
 
 # Path Operations: 1° Path operation
-@app.get("/") # Decorador de una función de Python
+@app.get(
+    path="/",
+    status_code=status.HTTP_200_OK
+    ) # Decorador de una función de Python
 def home():
     # Las API´s se comunican mediante JSON. En Python JSON es un diccionario...
     return {"Hello": "World"}
@@ -112,13 +117,20 @@ def home():
 # Request and Response Body
 # Al declarar un response model en mi decorator no necesito modificar la variable que retorno en mi func.
 
-@app.post("/person/new", response_model=PersonOut)
+@app.post(
+    path="/person/new", 
+    response_model=PersonOut,
+    status_code=status.HTTP_201_CREATED
+    )
 def create_person(person: Person = Body(...)): # Los "..." en Body indican que el Body es obligatorio
     return person # Retorno como response lo mismo que recibí como parametro
 
 # Validaciones: Query Parameters
 
-@app.get("/person/detail")
+@app.get(
+    path="/person/detail",
+    status_code=status.HTTP_200_OK
+    )
 def show_person(
     name: Optional[str] = Query(
         None, 
@@ -138,7 +150,9 @@ def show_person(
 
 # Validaciones: Path Parameters:
 
-@app.get("/person/detail/{person_id}")
+@app.get(
+    path="/person/detail/{person_id}",
+    status_code=status.HTTP_200_OK)
 def show_person(
     person_id: int = Path(
         ..., 
@@ -152,7 +166,10 @@ def show_person(
 
 # Validaciones: Request Body
 
-@app.put("/person/{person_id}")
+@app.put(
+    path="/person/{person_id}",
+    status_code=status.HTTP_200_OK
+    )
 def update_person(
     person_id: int = Path(
         ...,

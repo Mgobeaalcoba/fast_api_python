@@ -494,10 +494,9 @@ Por ejemplo si el cliente nos envía una contraseña entre sus datos nunca deber
 
 El response model va en el decorator. No en la function.
 
+```python
 # Request and Response Body
 # Al declarar un response model en mi decorator no necesito modificar la variable que retorno en mi func.
-
-```python
 # Clase de pydantic creada para mí response model.
 class PersonOut(BaseModel):
     first_name: str = Field(
@@ -543,6 +542,40 @@ Esto nos va a evitar problemas de sincronización de codigo y errores frente a u
 Por ejemplo en nuestra API-rest lo que vamos a abstraer y limpiar son las clases de Person y PersonOut creando una nueva clase llamada PersonBase. 
 
 --------------------------------------------
+
+## Status Code: 
+
+Pequeño numero de tres digitos que indica que pasó con la request del cliente. Esos status code deben ser manejados desde el servidor de forma profesional:
+
+Status Code:
+
+Aquí podrán visualizar la totalidad de los status code con hermosas imagenes de gatitos!!! 😻
+
+https://http.cat/
+
+Y aquí tienen información profesional sobre cada uno de los status code: 
+
+https://developer.mozilla.org/es/docs/Web/HTTP/Status
+
+Igualmente voy a dejar un breve resumen sobre cada grupo de status code: 
+
+- Respuestas informativas (100–199),
+- Respuestas satisfactorias (200–299),
+- Redirecciones (300–399),
+- Errores de los clientes (400–499),
+- y errores de los servidores (500–599). (Errores de nuestro codigo como Backend Dev´s)
+
+**El manejo profesional de Status Code consiste en que cada una de las "Path Operations" que hemos creado tenga un manejo de Status Code personalizado. Este es el Standar Correcto de trabajo en Backend.**
+
+Para esto vamos a tener que importar otro modulo de fast-api llamado "status".
+
+```python
+from fastapi import status
+```
+
+"status" de fastapi también se debe declarar y usar dentro de nuestros decoradores como hicimos con "response_model"
+
+
 
 
 

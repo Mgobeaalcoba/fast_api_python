@@ -41,10 +41,12 @@ class Location(BaseModel):
         max_length=20,
         example="Argentina"
     )
+    
+# Limpió mis lineas repetidas de codigo entre person y person out
+# aplicando la herencia: 
 
-class Person(BaseModel):
-    # Definimos el modelo según "pydantic":
-    # caracteristicas o atributos:
+# Class Person Base para limpiar codigo y luego aplicar herencia:
+class PersonBase(BaseModel):
     first_name: str = Field(
         ...,
         min_length=1,
@@ -70,8 +72,18 @@ class Person(BaseModel):
     is_married: Optional[bool] = Field(
         default=None,
         example=True
-    ) # Valores opcionales
+    )
 
+class Person(PersonBase):
+    # Solo agrego el password dado que los demas atributos ya me 
+    # vienen de PersonBase
+    # Manejo de contraseñas:
+    # 1- Jamas devolver la contraseña al cliente en el response. Solución: Response Model
+    # 2- Jamas almacenar la contraseña como texto plano sino como hash
+    password: str = Field(
+        ...,
+        min_length=8
+    )
     # Sub-Clase Config que define valore por defecto solo al servicio
     # de probar nuestra API
     # class Config:
@@ -85,6 +97,10 @@ class Person(BaseModel):
     #         }
     #     }
 
+class PersonOut(PersonBase):
+    # Pongo un pass porque todos los atributos de PersonOut ya
+    # me vienen de PersonBase
+    pass
 
 # Path Operations: 1° Path operation
 @app.get("/") # Decorador de una función de Python
@@ -94,8 +110,9 @@ def home():
 
 
 # Request and Response Body
+# Al declarar un response model en mi decorator no necesito modificar la variable que retorno en mi func.
 
-@app.post("/person/new")
+@app.post("/person/new", response_model=PersonOut)
 def create_person(person: Person = Body(...)): # Los "..." en Body indican que el Body es obligatorio
     return person # Retorno como response lo mismo que recibí como parametro
 

@@ -481,6 +481,70 @@ Las clases Query() y Path() tienen exactamente el mismo parametro para agregar e
 
 Con estos recursos ya tendremos los parametros del Path, las Querys y el Body precargados para probar nuestros endpoints desde la documentación automatica de FastAPI.
 
+--------------------------------------------
+--------------------------------------------
+
+# FastApi: MOdularización, Datos, Errores:
+
+## Response Model:
+
+Nos permite modelar la respuesta que le damos al cliente frente a un post por ejemplo, para no devolver datos sensibles que puedan implicar un problema de seguridad. 
+
+Por ejemplo si el cliente nos envía una contraseña entre sus datos nunca deberíamos devolver la misma.
+
+El response model va en el decorator. No en la function.
+
+# Request and Response Body
+# Al declarar un response model en mi decorator no necesito modificar la variable que retorno en mi func.
+
+```python
+# Clase de pydantic creada para mí response model.
+class PersonOut(BaseModel):
+    first_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50,
+        example="Nicole"
+        )
+    last_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50,
+        example="Ferandez"
+    )
+    age: int = Field(
+        ...,
+        gt=0,
+        le=115,
+        example=29
+    )
+    hair_color: Optional[HairColor] = Field(
+        default=None,
+        example="Blonde"
+    )  
+    is_married: Optional[bool] = Field(
+        default=None,
+        example=True
+    )
+
+@app.post("/person/new", response_model=PersonOut)
+def create_person(person: Person = Body(...)): # Los "..." en Body indican que el Body es obligatorio
+    return person # Retorno como response lo mismo que recibí como parametro
+```
+
+--------------------------------------------
+
+## Uso de herencia entre clases para limpieza de codigo:
+
+Cuando tenemos clases que repiten atributos y/o métodos, podemos y debemos abstraerlas a un nivel mas alto, otra clase, que tenga todos los atríbutos y métodos compartidos para que luego las clases hijas hereden directamente de ellas. 
+
+Esto nos va a evitar problemas de sincronización de codigo y errores frente a updates futuros. 
+
+Por ejemplo en nuestra API-rest lo que vamos a abstraer y limpiar son las clases de Person y PersonOut creando una nueva clase llamada PersonBase. 
+
+--------------------------------------------
+
+
 
 
 

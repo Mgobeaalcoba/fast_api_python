@@ -7,7 +7,7 @@ from pydantic import Field, HttpUrl, FilePath, DirectoryPath, EmailStr, PaymentC
 # FastAPI
 from fastapi import FastAPI
 from fastapi import status
-from fastapi import Body, Query, Path # Functions para validar Body, Query y Path
+from fastapi import Body, Query, Path, Form # Functions para validar Body, Query y Path
 
 
 # Si usamos el entry point acá el servidor no se levanta. Ojo!!!
@@ -104,6 +104,27 @@ class PersonOut(PersonBase):
     # me vienen de PersonBase
     pass
 
+class LoginBase(BaseModel):
+    username: str = Field(
+        ...,
+        max_length=20,
+        example="mariano2023"
+    )
+
+class Login(LoginBase):
+    password: str = Field(
+        ...,
+        min_length=5,
+        max_length=20,
+        example="lalala123"
+    )
+
+class LoginOut(LoginBase):
+    message: str = Field(
+        default="Login Succesfully"
+    )
+    # Es una clase de response model, por lo que NUNCA debemos retornar la clave
+
 # Path Operations: 1° Path operation
 @app.get(
     path="/",
@@ -123,7 +144,7 @@ def home():
     status_code=status.HTTP_201_CREATED
     )
 def create_person(person: Person = Body(...)): # Los "..." en Body indican que el Body es obligatorio
-    return person # Retorno como response lo mismo que recibí como parametro
+    return person # Retorno como response lo mismo que recibí como parametro pero con formato response model
 
 # Validaciones: Query Parameters
 
@@ -191,3 +212,18 @@ def update_person(
     results = person.dict()
     results.update(location.dict())
     return results
+
+# Manejo de Formularios con python-multipart:
+
+@app.post(
+    path="/login",
+    status_code=status.HTTP_201_CREATED,
+    response_model=LoginOut
+)
+def login(
+    # Recibo dos parametros que van a venir de un "Form"
+    username: str = Form(...),
+    password: str = Form(...)
+):
+    # Importante usar los nombres de los parametros para instanciar correctamente la clase
+    return Login(username=username, password=password)

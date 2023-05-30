@@ -575,6 +575,24 @@ from fastapi import status
 
 "status" de fastapi también se debe declarar y usar dentro de nuestros decoradores como hicimos con "response_model"
 
+-----------------------------------
+
+## Manejo de Formularios o "forms"
+
+Muchas veces los datos que nos envía un cliente no vienen ni en el path, ni en los query parameters ni tampoco en el body de una request. Sino que los mismos son envíados mediante la acción de completar un formulario. El mismo vive en un frontend con el que el cliente interactua y luego hace submit al mismo para enviar los datos a un servidor. 
+
+Por ejemplo los formularios de registración que practicamente cualquier plataforma web tiene para sus usuarios. 
+
+Estos datos cargados por formulario también pueden, y deben ser leidos por fastapi para poder llevar adelante las acciones que cada endpoint tiene asociadaas. Pero para esto necesitamos una librería adicional de python dado que fastapi de por sí no puede trabajar con formularios...
+
+```bash
+pip install python-multipart
+```
+
+
+
+
+
 
 
 

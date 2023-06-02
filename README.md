@@ -589,6 +589,118 @@ Estos datos cargados por formulario también pueden, y deben ser leidos por fast
 pip install python-multipart
 ```
 
+----------------------------------
+
+## Cookies y Header
+
+Son fuentes de datos aún mas exoticas que los path parameters, query parameters, body y forms. Pero también de ellos podemos obtener información relevante. 
+
+**Cookies**
+
+Una pieza de código que un servidor mete en tu computadora cuando estas navegando en la web
+
+**Headers**
+
+Una parte de una petición o respuesta HTTP que contiene datos sobre la petición o la respuesta, como el formato, quien la hizo, el contenido, etc…
+
+Ejemplo en código
+
+```python
+@app.post(
+    path='/contact',
+    status_code=status.HTTP_200_OK
+)
+def contact(
+    first_name: str = Form(
+        ...,
+        max_length=20,
+        min_length=1,
+        example='Peter'
+    ),
+    last_name: str = Form(
+        ...,
+        max_length=20,
+        min_length=1,
+        example='Chiguire'
+    ),
+    email: EmailStr = Form(
+        ...,
+        example='peterchiguire@gmail.com'
+    ),
+    message: str = Form(
+        ...,
+        min_length=20,
+        max_length=280,
+        example='Hola, estoy interesado en tu proyecto, jajaj xdddd'
+    ),
+    user_agent: Optional[str] = Header(default=None),
+    ads: Optional[str] = Cookie(default=None)
+):
+    return {
+        'first_name': first_name,
+        'last_name': last_name,
+        'email': email,
+        'message': message,
+        'user_agent': user_agent,
+        'ads': ads
+    }
+```
+
+Response Body
+
+```json
+{
+  "first_name": "Peter",
+  "last_name": "Chiguire",
+  "email": "peterchiguire@gmail.com",
+  "message": "Hola, estoy interesado en tu proyecto, jajaj xdddd",
+  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36 OPR/80.0.4170.61",
+  "ads": null
+}
+```
+
+--------------------------------------
+
+# Archivos
+
+Muchas veces, no solo queremos recibir datos de tipo strings, int, headers, cookies, etc. Sino que necesitamos recibir fotos, videos, o archivos csv, xls, etc. Para estos casos fastapi también nos permite recibir estos archivos y manejarlos en nuestro servidor. 
+
+**Archivos**
+
+[Request Files - FastAPI](https://fastapi.tiangolo.com/tutorial/request-files/)
+
+Entrada de datos que se refiere a los archivos FastAPI, por ejemplo una imagen o un video, se utilizan dos clases File y UploadFile
+
+**UploadFile**
+
+Esta clase tiene una serie de **parametros**, se refiere a la clase donde se guardará el archivo
+
+**filename**: se refiere al nombre del archivo, con esto tenemos el control sobre el nombre del archivo que suba el cliente a la aplicación.
+
+**content_type**: formato del archivo por ejemplo JPEG, MP4, GIF…
+
+**file**: se refiere al archivo en si mismo, los bytes del mismo
+
+**File**
+
+Hereda de Form y funciona similar a las clases Query, Path y Body, se encarga de guardar los bytes del archivo.
+
+*Ventajas de usar UploadFile en lugar de solo File o Bytes*
+
+El archivo se guardará en la memoria hasta que supere un tamaño máximo, al pasar ese límite se guardara en el disco, esto quiere decir que funciona mucho mejor con archivos grandes sin consumir toda la memoria RAM
+Puedes obtener metadata del archivo
+funciona como un file-like async interface.
+Usa metodo Asincronos como write, read, seek y close
+
+*Repaso de tipos de entradas de datos que tenemos disponibles en FastAPI:*
+
+- Path Parameters
+- Query Parameters
+- Request Body
+- Forms
+- Headers
+- Cookies
+- Files: Se divide en dos: File & UploadFile
 
 
 

@@ -7,7 +7,7 @@ from pydantic import Field, HttpUrl, FilePath, DirectoryPath, EmailStr, PaymentC
 # FastAPI
 from fastapi import FastAPI
 from fastapi import status
-from fastapi import Body, Query, Path, Form # Functions para validar Body, Query y Path
+from fastapi import Body, Query, Path, Form, Header, Cookie, File, UploadFile # Functions para validar Body, Query y Path
 
 
 # Si usamos el entry point acá el servidor no se levanta. Ojo!!!
@@ -213,7 +213,7 @@ def update_person(
     results.update(location.dict())
     return results
 
-# Manejo de Formularios con python-multipart:
+# Forms / Manejo de Formularios con python-multipart:
 
 @app.post(
     path="/login",
@@ -227,3 +227,56 @@ def login(
 ):
     # Importante usar los nombres de los parametros para instanciar correctamente la clase
     return Login(username=username, password=password)
+
+# Cookies and Headers Parameters:
+
+@app.post(
+    path="/contact", # Formulario de contacto de la pagina web
+    status_code=status.HTTP_200_OK
+)
+def contact(
+    # Parametros que vienen de un form
+    first_name: str = Form(
+        ...,
+        max_length=20,
+        min_length=1
+    ),
+    last_name: str = Form(
+        ...,
+        max_length=20,
+        min_length=1
+    ),
+    email: EmailStr = Form(
+        ...
+    ),
+    messege: str = Form(
+        ...,
+        min_length=20
+    ),
+    # Parametros que vienen de Headers y de Cookies:
+    user_agent: Optional[str] = Header(
+        default=None
+    ),
+    ads: Optional[str] = Cookie(
+        default=None
+    )
+):
+    return user_agent
+
+# Files / Recibiendo archivos del cliente
+
+@app.post(
+    path="/post-image"
+)
+def post_image(
+    image: UploadFile = File(
+        ...
+    )
+):
+    return {
+        "Filename": image.filename,
+        "Format": image.content_type,
+        "Size(kb)": round(len(image.file.read())/1024, ndigits=2) # El len del archivo sería la cantidad de bytes del mismo.
+    }
+
+

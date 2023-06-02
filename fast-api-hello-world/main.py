@@ -7,6 +7,7 @@ from pydantic import Field, HttpUrl, FilePath, DirectoryPath, EmailStr, PaymentC
 # FastAPI
 from fastapi import FastAPI
 from fastapi import status
+from fastapi import HTTPException
 from fastapi import Body, Query, Path, Form, Header, Cookie, File, UploadFile # Functions para validar Body, Query y Path
 
 
@@ -128,7 +129,8 @@ class LoginOut(LoginBase):
 # Path Operations: 1° Path operation
 @app.get(
     path="/",
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_200_OK,
+    tags=["Home"]
     ) # Decorador de una función de Python
 def home():
     # Las API´s se comunican mediante JSON. En Python JSON es un diccionario...
@@ -141,7 +143,8 @@ def home():
 @app.post(
     path="/person/new", 
     response_model=PersonOut,
-    status_code=status.HTTP_201_CREATED
+    status_code=status.HTTP_201_CREATED,
+    tags=["Persons"]
     )
 def create_person(person: Person = Body(...)): # Los "..." en Body indican que el Body es obligatorio
     return person # Retorno como response lo mismo que recibí como parametro pero con formato response model
@@ -150,7 +153,8 @@ def create_person(person: Person = Body(...)): # Los "..." en Body indican que e
 
 @app.get(
     path="/person/detail",
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_200_OK,
+    tags=["Persons"]
     )
 def show_person(
     name: Optional[str] = Query(
@@ -173,7 +177,8 @@ def show_person(
 
 @app.get(
     path="/person/detail/{person_id}",
-    status_code=status.HTTP_200_OK)
+    status_code=status.HTTP_200_OK,
+    tags=["Persons"])    
 def show_person(
     person_id: int = Path(
         ..., 
@@ -189,7 +194,8 @@ def show_person(
 
 @app.put(
     path="/person/{person_id}",
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_200_OK,
+    tags=["Persons"]
     )
 def update_person(
     person_id: int = Path(
@@ -218,7 +224,8 @@ def update_person(
 @app.post(
     path="/login",
     status_code=status.HTTP_201_CREATED,
-    response_model=LoginOut
+    response_model=LoginOut,
+    tags=["Login"]
 )
 def login(
     # Recibo dos parametros que van a venir de un "Form"
@@ -232,7 +239,8 @@ def login(
 
 @app.post(
     path="/contact", # Formulario de contacto de la pagina web
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_200_OK,
+    tags=["Contact"]
 )
 def contact(
     # Parametros que vienen de un form
@@ -266,7 +274,8 @@ def contact(
 # Files / Recibiendo archivos del cliente
 
 @app.post(
-    path="/post-image"
+    path="/post-image",
+    tags=["Upload Files"]
 )
 def post_image(
     image: UploadFile = File(
@@ -278,5 +287,32 @@ def post_image(
         "Format": image.content_type,
         "Size(kb)": round(len(image.file.read())/1024, ndigits=2) # El len del archivo sería la cantidad de bytes del mismo.
     }
+
+# Manejo de errores con HTTPException
+
+persons = [1, 2, 3, 4, 5] # Personas registradas en nuestra api
+
+@app.get(
+    path='/person/detail_2/{person_id}',
+    status_code=status.HTTP_200_OK,
+    tags=["Persons"]
+)
+def show_person_2(
+    person_id: int = Path(
+        ...,
+        gt=0,
+        title='Person Id',
+        description='Person ID on the Database',
+        example=20
+    )
+):
+
+    if person_id not in persons:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Person not found'
+        )
+
+    return {person_id: 'it exists!'}
 
 

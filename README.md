@@ -702,6 +702,79 @@ Usa metodo Asincronos como write, read, seek y close
 - Cookies
 - Files: Se divide en dos: File & UploadFile
 
+--------------------------------------------------
+
+# HTTPException
+
+Clase de FastAPI que nos va a permitir trabajar con los errores al usar nuestra API.
+
+**Manejo de Errores**
+
+Para esto importamos el módulo de FastApi
+
+```python
+from fastapi import HTTPException
+```
+
+En caso de que se conozca la posibilidad de que haya un error lo ideal es manejarlo por ejemplo en el detail de una persona si el person_id no existe, manejar el error enviando un 404 Not Found, una forma de hacerlo seria
+
+```python
+persons = [1, 2, 3, 4, 5]
+
+@app.get(
+    path='/person/detail/{person_id}',
+    status_code=status.HTTP_200_OK
+)
+def show_person(
+    person_id: int = Path(
+        ...,
+        gt=0,
+        title='Person Id',
+        description='Person ID on the Database',
+        example=20
+    )
+):
+
+    if person_id not in persons:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Person not found'
+        )
+
+    return {person_id: 'it exists!'}
+```
+------------------------------------------------------
+
+# Comenzando a ordenar nuestra documentación: etiquetas.
+
+Las etiquetas (tags) son un título que aparece en la documentación interactiva para que las path operations estén en un orden correcto.
+
+Para ello se utiliza el parámetro tag en el path operation decorator.
+
+```python
+@app.get(
+    path='/person/detail',
+    status_code=status.HTTP_200_OK,
+    tags=['Persons']
+    )
+
+@app.post(
+    path='/contact',
+    status_code=status.HTTP_200_OK,
+    tags=['Forms']
+)
+
+@app.post(
+    path='/post-image',
+    tags=['Files']
+)
+```
+
+Te quedaría una estructura como esta: 
+
+<img src="./images/tags_etiquetas.png">
+
+
 
 
 

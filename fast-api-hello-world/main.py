@@ -69,7 +69,7 @@ class PersonBase(BaseModel):
     )
     hair_color: Optional[HairColor] = Field(
         default=None,
-        example="Blonde"
+        example="blonde"
     ) # Valores opcionales 
     is_married: Optional[bool] = Field(
         default=None,
@@ -130,10 +130,19 @@ class LoginOut(LoginBase):
 @app.get(
     path="/",
     status_code=status.HTTP_200_OK,
-    tags=["Home"]
-    ) # Decorador de una función de Python
+    tags=["Home"],
+    summary="Home API"
+) # Decorador de una función de Python
 def home():
     # Las API´s se comunican mediante JSON. En Python JSON es un diccionario...
+    """
+    Home
+
+    This path operations is the home of de API.
+
+    Returns:
+    - A dict with a "Hello World" content.
+    """
     return {"Hello": "World"}
 
 
@@ -144,9 +153,24 @@ def home():
     path="/person/new", 
     response_model=PersonOut,
     status_code=status.HTTP_201_CREATED,
-    tags=["Persons"]
-    )
+    tags=["Persons"],
+    # Titulo personalizado para la path operation docs
+    summary="Create Person in the app"
+)
 def create_person(person: Person = Body(...)): # Los "..." en Body indican que el Body es obligatorio
+    # Descripción para la path operations docs
+    """
+    Create Person
+
+    This path operation create an entity of Person with the data that the user pass by the request's body and save the information in the database
+
+    Parameters:
+    - Request body parameter:
+        - **person: Person** -> A person model with first name, last name, age, hair color, marital status and password.
+
+    Returns:
+    - A person model with first name, last name, age, hair color and marital status
+    """
     return person # Retorno como response lo mismo que recibí como parametro pero con formato response model
 
 # Validaciones: Query Parameters
@@ -154,9 +178,10 @@ def create_person(person: Person = Body(...)): # Los "..." en Body indican que e
 @app.get(
     path="/person/detail",
     status_code=status.HTTP_200_OK,
-    tags=["Persons"]
-    )
-def show_person(
+    tags=["Persons"],
+    summary="Show any person received by the client"
+)
+def show_any_person(
     name: Optional[str] = Query(
         None, 
         min_length=1, 
@@ -171,6 +196,19 @@ def show_person(
         description="This is the person age. It's required."), # Query Parameter obligatorio... Mala práctica pero puede ocurrir
         example=25
 ):
+    """
+    Show Any Person
+
+    This path operation receive a person's name and person's age and return the same in dict format
+
+    Parameters:
+    - Query parameters:
+        - **name (Optional[str], optional)** -> person's name. 
+        - **age (str, optional)** -> person's age. 
+
+    Returns:
+    -  A dict with the person's name and person's age.
+    """
     return {name: age}
 
 # Validaciones: Path Parameters:
@@ -178,7 +216,9 @@ def show_person(
 @app.get(
     path="/person/detail/{person_id}",
     status_code=status.HTTP_200_OK,
-    tags=["Persons"])    
+    tags=["Persons"],
+    summary="Person Exists"
+)
 def show_person(
     person_id: int = Path(
         ..., 
@@ -188,6 +228,18 @@ def show_person(
         example=123
         ) # Como es un path parameters debe ser obligatorio
 ):
+    """
+    Show Person
+
+    It simulate to search a person by id
+
+    Parameters:
+    - Path parameters:
+        - **person_id (int, optional)** -> A numeric id. 
+
+    Returns:
+    - A dictionary with de the person_id and the search's result
+    """
     return {person_id: "It exists!"}
 
 # Validaciones: Request Body
@@ -195,8 +247,10 @@ def show_person(
 @app.put(
     path="/person/{person_id}",
     status_code=status.HTTP_200_OK,
-    tags=["Persons"]
-    )
+    response_model=PersonOut,
+    tags=["Persons"],
+    summary="Update Person"
+)
 def update_person(
     person_id: int = Path(
         ...,
@@ -212,6 +266,21 @@ def update_person(
         ...,
     )
 ):
+    """
+    Update Person
+
+    This path operation search and update a person id and return a dict with the person and the location
+
+    Args:
+    - Path parameteres:
+        - **person_id (int, optional)** -> A numeric person id. 
+    - Request body parameters:
+        - **person (Person, optional)** -> A person model with first name, last name, age, hair color, marital status and password.  
+        - **location (Location, optional)** -> A location model with city, state and country.
+
+    Returns:
+    - A unique dictionary with the person and the location.
+    """
     # Voy a combinar el JSON/Diccionario person con el 
     # JSON/Diccionario location en una sola variable. 
     # Para luego retornarla
@@ -224,8 +293,8 @@ def update_person(
 @app.post(
     path="/login",
     status_code=status.HTTP_201_CREATED,
-    response_model=LoginOut,
-    tags=["Login"]
+    tags=["Login"],
+    summary="Login"
 )
 def login(
     # Recibo dos parametros que van a venir de un "Form"

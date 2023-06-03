@@ -774,6 +774,23 @@ Te quedaría una estructura como esta:
 
 <img src="./images/tags_etiquetas.png">
 
+----------------------------------------------
+
+# Nombre y descripción de una path operation
+
+Otra parte importante para documentar nuestras API´s es ponerle nombre y descripción a cada una de nuestras path operations...
+
+Los aspectos para hacer el docstring de las path operations:
+
+- Título
+- Descripción
+- Parámetros
+- Resultado
+
+En python y usando visual studio code podemos generar la estructura de una documentación profesional con docstrings usando la extensión "autoDocstring". Para ello abrimos las triples comillas simples o dobles """ o '''
+
+<img src="./images/nombre_descripcion.png">
+
 
 
 

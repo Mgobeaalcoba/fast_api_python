@@ -791,6 +791,24 @@ En python y usando visual studio code podemos generar la estructura de una docum
 
 <img src="./images/nombre_descripcion.png">
 
+----------------------------------------------
+
+# Deprecar una path operation. (Dejar sin efecto una path operation)
+
+Dejar de usar una path operation porque:
+
+- Encontramos una mejor forma de hacer las cosas. 
+- Vamos a hacer lo mismo pero de una manera distinta. 
+- Estamos haciendo una refactorización profunda de nuestro codigo. Esto sucede cuando el codigo es malo y queremos rearmarlo. 
+
+¿Como se hace? 
+
+Muy sencillo: En el path operation decorator vamos a poner un nuevo parametro llamado: "deprecated=True"
+
+Así se ve una path operation deprecada: 
+
+<img src="./images/deprecated.png">
+
 
 
 

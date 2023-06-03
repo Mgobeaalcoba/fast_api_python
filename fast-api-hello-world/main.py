@@ -217,7 +217,9 @@ def show_any_person(
     path="/person/detail/{person_id}",
     status_code=status.HTTP_200_OK,
     tags=["Persons"],
-    summary="Person Exists"
+    summary="Person Exists",
+    # deprecamos esta path operation porque tenemos una mejor forma de hacerlo debajo:
+    deprecated=True
 )
 def show_person(
     person_id: int = Path(
@@ -364,7 +366,8 @@ persons = [1, 2, 3, 4, 5] # Personas registradas en nuestra api
 @app.get(
     path='/person/detail_2/{person_id}',
     status_code=status.HTTP_200_OK,
-    tags=["Persons"]
+    tags=["Persons"],
+    summary="Person Exists",
 )
 def show_person_2(
     person_id: int = Path(
@@ -375,7 +378,18 @@ def show_person_2(
         example=20
     )
 ):
+    """
+    Show Person
 
+    It search a person by id
+
+    Parameters:
+    - Path parameters:
+        - **person_id (int, optional)** -> A numeric id. 
+
+    Returns:
+    - A dictionary with de the person_id and the search's result
+    """
     if person_id not in persons:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

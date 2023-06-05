@@ -3,6 +3,7 @@ from typing import Optional, List
 from enum import Enum
 from uuid import UUID # Universal Unique Identified
 from datetime import date, datetime
+import json # Librería del core de Python para trabajar con JSON
 # Pydantic
 from pydantic import BaseModel
 from pydantic import Field, HttpUrl, FilePath, DirectoryPath, EmailStr, PaymentCardNumber, IPvAnyAddress, NegativeFloat, PositiveFloat, NegativeInt, PositiveInt # Function para validar Models
@@ -90,7 +91,9 @@ class Tweet(BaseModel):
     summary="Register a User",
     tags=["Users"]
 )
-def signup():
+def signup(
+    user: UserRegister = Body(...)
+):
     """
     Register a User
 
@@ -106,9 +109,23 @@ def signup():
         - email: EmailStr
         - first_name: str
         - last_name: str
-        - birth_date: str
+        - birth_date: date
     """
-    pass
+    with open("users.json", "r+", encoding="utf-8") as f:
+        results: List = json.loads(f.read()) # El contenido de f viene en string y lo transformo en lista de dicts con json.loads(). Es lista porque los files json están con "[]" al principio
+        user_dict = user.dict() # Convierto el objeto user que recibo en body en un dict.
+        # Convierto mis datos UUID y date para no tener errores:
+        # Los datos de tipo UUID y date no se convierten a JSON de forma natural
+        user_dict["user_id"] = str(user_dict["user_id"]) # Casteo a str
+        user_dict["birth_date"] = str(user_dict["birth_date"]) # Casteo a str
+        # Agrego a mi lista de diccionarios que me traje del archivo JSON ("base de datos") mi nuevo user:
+        results.append(user_dict)
+        # Me muevo al primer caracter/byte de mi archivo:
+        f.seek(0)
+        # Escribo en mi archivo la lista que ya tenía con el nuevo usuario
+        f.write(json.dumps(results))
+        return user # Retorno el usuario pero sin clave dado el response_model
+
 
 ### Login a user
 @app.post(

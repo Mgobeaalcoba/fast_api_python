@@ -22,8 +22,7 @@ app = FastAPI()
 
 class UserBase(BaseModel):
     user_id: UUID = Field(
-        ...,
-        example='bd65600d-8669-4903-8a14-af88203add38'
+        ...
     ) # Universal Unique Identified
     email: EmailStr = Field(
         ...,
@@ -147,7 +146,23 @@ def login():
     tags=["Users"]
 )
 def show_all_users():
-    pass
+    """
+    This path operations shows all users in the app
+
+    Parameters:
+    - Without parameters
+
+    Returns:
+    - A json list with all user users in the app, with de folloging struct:
+        - user_id: UUID
+        - email: EmailStr
+        - first_name: str
+        - last_name: str
+        - birth_date: date
+    """
+    with open("users.json", "r", encoding="utf-8") as f:
+        results = json.loads(f.read())
+        return results
 
 ### Show a user
 @app.get(

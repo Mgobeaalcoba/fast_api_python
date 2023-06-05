@@ -845,6 +845,12 @@ Teniendo lo anterior en cuenta, sugiero usar la siguiente estructura:
 - PUT /users/{id} -> Updates a specific user
 - DELETE /users/{id} -> Deletes a specific user
 
+En este proyecto vamos a guardar nuestros datosa en **archivos .json (users y tweets)** pero en un proyecto profesional en la vida real estos datos se deben almacenar en bases de datos, ya sea SQL o NoSQL
+
+Un **JSON** puede ser un diccionario de python o también puede ser una lista de diccionarios de python. 
+
+Ambos JSON creados vamos a abrir una lista en cada uno "[]" para indicar que nosotros vamos a guardar en esa lista cada usuario o tweet creado como un diccionario dentro de la misma. 
+
 
 
 

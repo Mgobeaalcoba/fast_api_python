@@ -153,7 +153,7 @@ def show_all_users():
     - Without parameters
 
     Returns:
-    - A json list with all user users in the app, with de folloging struct:
+    - A json list with all users in the app, with de folloging struct:
         - user_id: UUID
         - email: EmailStr
         - first_name: str
@@ -208,7 +208,23 @@ def update_a_user():
     tags=["Tweets"]
     )
 def home():
-    return {"Twitter API": "Working!"}
+    """
+    This path operations shows all tweets in the app
+
+    Parameters:
+    - Without parameters
+
+    Returns:
+    - A json list with all tweets in the app, with de folloging struct:
+        - tweet_id: UUID
+        - content: str
+        - created_at: datetime
+        - updated_at: Optional[datetime]
+        - by: User
+    """
+    with open("tweets.json", "r", encoding="utf-8") as f:
+        results = json.loads(f.read())
+        return results
 
 ### Post a Tweet
 @app.post(

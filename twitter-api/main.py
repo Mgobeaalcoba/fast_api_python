@@ -68,10 +68,10 @@ class Tweet(BaseModel):
         max_length=256,
         min_length=1
     )
-    created_at: date = Field(
+    created_at: datetime = Field(
         default=datetime.now()
     )
-    updated_at: Optional[date] = Field(
+    updated_at: Optional[datetime] = Field(
         default=None
     )
     by: User = Field(
@@ -218,8 +218,38 @@ def home():
     summary="Post a Tweet",
     tags=["Tweets"]
 )
-def post_a_tweet():
-    pass
+def post_a_tweet(tweet: Tweet = Body(...)):
+    """
+    Post a Tweet
+
+    This path operation post a tweet in the app
+
+    Paremeters:
+    - Request Body Parameter:
+        - twwet: Tweet
+
+    Returns:
+    - A json with the basic tweet information:
+        - tweet_id: UUID
+        - content: str
+        - created_at: datetime
+        - updated_at: Optional[datetime]
+        - by: User
+    """
+    with open("tweets.json", "r+", encoding="utf-8") as f:
+        results: List = json.loads(f.read())
+        tweet_dict = tweet.dict()
+        tweet_dict["tweet_id"] = str(tweet_dict["tweet_id"]) # Casteo a str
+        tweet_dict["created_at"] = str(tweet_dict["created_at"]) # Casteo a str
+        if tweet_dict["updated_at"]:
+            tweet_dict["updated_at"] = str(tweet_dict["updated_at"]) # Castero a str
+        user_tweet: dict = tweet_dict["by"]
+        user_tweet["user_id"] = str(user_tweet["user_id"])
+        user_tweet["birth_date"] = str(user_tweet["birth_date"])
+        results.append(tweet_dict)
+        f.seek(0)
+        f.write(json.dumps(results))
+        return tweet
 
 ### Show a Tweet
 @app.get(

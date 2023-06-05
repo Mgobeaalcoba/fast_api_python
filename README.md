@@ -833,7 +833,7 @@ Teniendo lo anterior en cuenta, sugiero usar la siguiente estructura:
 - PUT /tweets/{id} -> Updates a specific tweet
 - DELETE /tweets/{id} -> Deletes a specific tweet
 
-**Authentication** (Modelo de pydantic)
+**Authentication**
 
 - POST /auth/signup -> Registers a new user
 - POST /auth/login -> Login a user

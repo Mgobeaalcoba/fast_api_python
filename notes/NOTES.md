@@ -123,7 +123,7 @@ Hacer modificaciones parciales al documento a diferencia de put que permite camb
 - Trace:
 Nos permite observar que esta pasando en la peticion y nos devuelve nuestro input con propositos de debugging.
 
-<img src="./images/path_operations.png">
+<img src="../images/path_operations.png">
 
 --------------------------------------
 
@@ -144,7 +144,7 @@ async def read_item(item_id):
     return {"item_id": item_id}
 ```
 
-<img src="./images/path_parameters.png">
+<img src="../images/path_parameters.png">
 
 --------------------------------------
 
@@ -158,7 +158,7 @@ Query parameters: son un conjunto definido de parámetros adjuntos al final de u
 @app.get("/users/{user_id}/details?age=20&height=184) # Detras de "?" están los query parameteres
 ```
 
-<img src="./images/query_parameters.png">
+<img src="../images/query_parameters.png">
 
 --------------------------------------
 
@@ -174,7 +174,7 @@ Un Request Body son datos enviados por el cliente a su API.
 
 Un Response Body son los datos que su API envía al cliente.
 
-<img src="./images/request_body.png">
+<img src="../images/request_body.png">
 
 --------------------------------------------
 
@@ -463,7 +463,7 @@ Todas estas validaciones se importan de Pydantic
 from pydantic import HttpUrl, FilePath, DirectoryPath, EmailStr, PaymentCardNumber, IPvAnyAddress, NegativeFloat, PositiveFloat, NegativeInt, PositiveInt 
 ```
 
-<img src="./images/datos_especiales.png">
+<img src="../images/datos_especiales.png">
 
 ----------------------------------------------
 
@@ -772,7 +772,7 @@ Para ello se utiliza el parámetro tag en el path operation decorator.
 
 Te quedaría una estructura como esta: 
 
-<img src="./images/tags_etiquetas.png">
+<img src="../images/tags_etiquetas.png">
 
 ----------------------------------------------
 
@@ -789,7 +789,7 @@ Los aspectos para hacer el docstring de las path operations:
 
 En python y usando visual studio code podemos generar la estructura de una documentación profesional con docstrings usando la extensión "autoDocstring". Para ello abrimos las triples comillas simples o dobles """ o '''
 
-<img src="./images/nombre_descripcion.png">
+<img src="../images/nombre_descripcion.png">
 
 ----------------------------------------------
 
@@ -807,7 +807,7 @@ Muy sencillo: En el path operation decorator vamos a poner un nuevo parametro ll
 
 Así se ve una path operation deprecada: 
 
-<img src="./images/deprecated.png">
+<img src="../images/deprecated.png">
 
 Fin de teoría!!!
 
